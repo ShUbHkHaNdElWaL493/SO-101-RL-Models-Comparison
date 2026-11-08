@@ -1,0 +1,24 @@
+[project]
+name = "so-101-rl-models-comparison"
+version = "1.0.0"
+description = "A comparison between RL models in a scenario with a LeRobot SO-101 in a restaurant setting for picking up different utensils"
+readme = "README.md"
+authors = [
+    { name = "Shubh Khandelwal", email = "shubh4664@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "gymnasium[mujoco]>=1.4.0",
+    "mujoco>=4.0.0",
+    "stable-baselines3[extra]>=2.9.2",
+    "torch>=2.15.0",
+    "torchaudio>=2.11.1",
+    "torchvision>=0.29.2",
+]
+
+[project.scripts]
+so-101-rl-models-comparison = "so_101_rl_models_comparison:main"
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
