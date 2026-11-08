@@ -1,0 +1,13 @@
+The Robot Studio SO101
+
+Built by:   Robotstudio
+Licence:    Apache 2.0
+Source:     https://github.com/google-deepmind/mujoco_menagerie/tree/main/robotstudio_so101
+Collection: MuJoCo Menagerie
+Packaged:   2026-11-06 by urdfbase.com/models/robotstudio-so101/
+
+This folder holds the model written as MJCF, with mesh paths rewritten to
+meshes/ so they resolve wherever the folder is opened. The original files, with
+the paths their authors wrote, are at the source above.
+
+The robot belongs to the people who built it. Credit the source, not this site.
