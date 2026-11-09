@@ -8,8 +8,11 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "gymnasium[mujoco]>=1.4.0",
+    "gymnasium[mujoco]>=0.29.1",
+    "imitation>=0.5.0",
     "mujoco>=4.0.0",
+    "onnx>=1.23.2",
+    "onnxruntime-gpu>=1.31.1",
     "stable-baselines3[extra]>=2.9.2",
     "torch>=2.15.0",
     "torchaudio>=2.11.1",
