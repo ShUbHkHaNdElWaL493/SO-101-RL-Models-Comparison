@@ -1,7 +1,7 @@
 [project]
 name = "so-101-rl-models-comparison"
 version = "1.0.0"
-description = "A comparison between RL models in a scenario with a LeRobot SO-101 in a restaurant setting for picking up different utensils"
+description = "A comparison between RL models in a scenario with a LeRobot SO-101 for reaching a target pose"
 readme = "README.md"
 authors = [
     { name = "Shubh Khandelwal", email = "shubh4664@gmail.com" }
