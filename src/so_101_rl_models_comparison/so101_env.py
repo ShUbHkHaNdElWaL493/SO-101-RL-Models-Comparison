@@ -5,10 +5,10 @@ import numpy as np
 class SO101Env(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": 50}
 
-    def __init__(self, xml_path, render_mode=None):
+    def __init__(self, mjcf_file, mode='train', render_mode=None):
         super().__init__()
 
-        self.model = mujoco.MjModel.from_xml_path(xml_path)
+        self.model = mujoco.MjModel.from_xml_path(mjcf_file)
         self.data = mujoco.MjData(self.model)
         self.render_mode = render_mode
 
@@ -51,14 +51,35 @@ class SO101Env(gym.Env):
             self.model.jnt_range[5, 1]
         ))
 
-    def reset(self, seed=None, options=None):
+    def _set_target(self, target_pos, target_quat, target_gripper):
+        if target_pos != None:
+            self.target_pos = target_pos
+        if target_quat != None:
+            self.target_quat = target_quat
+        if target_gripper != None:
+            self.target_gripper = target_gripper
+
+    def reset(self, seed=None, reposition=True, target_pos=None, target_quat=None, target_gripper=None):
         super().reset(seed=seed)
 
-        mujoco.mj_resetData(self.model, self.data)
-        self.data.qpos[:6] = np.random.uniform(-0.2, 0.2, size=6)
+        if reposition:
+            mujoco.mj_resetData(self.model, self.data)
+            self.data.qpos[:6] = np.random.uniform(-0.2, 0.2, size=6)
+
+        if target_pos or target_quat or target_gripper:
+            self._set_target()
+        else:
+            self._sample_target()
+
+        try:
+            target_mocap_id = self.model.body("target").mocapid[0]
+            self.data.mocap_pos[target_mocap_id] = self.target_pos
+            self.data.mocap_quat[target_mocap_id] = self.target_quat
+        except Exception:
+            pass # Skip if no target body exists in XML
+
         mujoco.mj_forward(self.model, self.data)
 
-        self._sample_target()
         obs = self._get_obs()
         info = {}
         return obs, info
@@ -84,20 +105,20 @@ class SO101Env(gym.Env):
         ee_quat = self.data.body("gripper").xquat
         current_gripper = self.data.qpos[5]
 
-        error_position = np.linalg.norm(ee_pos - self.target_pos)
+        error_pos = np.linalg.norm(ee_pos - self.target_pos)
 
         quat_dot = np.abs(np.dot(ee_quat, self.target_quat))
-        error_orientation = 1.0 - np.clip(quat_dot, 0.0, 1.0)
+        error_quat = 1.0 - np.clip(quat_dot, 0.0, 1.0)
 
         error_gripper = np.abs(current_gripper - self.target_gripper)
 
-        reward_pos = -1.0 * error_position
-        reward_ori = -2.0 * error_orientation
-        reward_gripper = -0.5 * error_gripper
+        reward_pos = -2.0 * error_pos
+        reward_quat = -4.0 * error_quat
+        reward_gripper = -1.0 * error_gripper
 
-        success = (error_position < 0.02) and (error_orientation < 0.1) and (error_gripper < 0.2)
+        success = (error_pos < 0.01) and (error_quat < 0.01) and (error_gripper < 0.01)
         reward_success = 10.0 if success else 0.0
-        reward = reward_pos + reward_ori + reward_gripper + reward_success
+        reward = reward_pos + reward_quat + reward_gripper + reward_success
 
         # ----------------------------------------------------
         # TERMINATION CONDITIONS
@@ -107,7 +128,7 @@ class SO101Env(gym.Env):
 
         return obs, reward, terminated, truncated, {
             "success": success,
-            "error_position": error_position,
-            "error_orientation": error_orientation,
+            "error_position": error_pos,
+            "error_orientation": error_quat,
             "error_gripper": error_gripper
         }

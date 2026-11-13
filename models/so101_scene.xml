@@ -15,16 +15,13 @@
   </asset>
 
   <worldbody>
-    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
-
-    <geom name="floor" pos="0 0 -0.75" size="5 5 0.05" type="plane" material="groundplane"/>
-
-    <body name="restaurant_table" pos="0 0 -0.05">
-      <geom name="table_top" type="box" size="0.6 0.6 0.05" rgba="0.6 0.4 0.2 1" friction="1 0.005 0.0001"/>
-      <geom name="leg1" type="box" size="0.02 0.02 0.35" pos="0.55 0.55 -0.4"/>
-      <geom name="leg2" type="box" size="0.02 0.02 0.35" pos="-0.55 0.55 -0.4"/>
-      <geom name="leg3" type="box" size="0.02 0.02 0.35" pos="0.55 -0.55 -0.4"/>
-      <geom name="leg4" type="box" size="0.02 0.02 0.35" pos="-0.55 -0.55 -0.4"/>
-    </body>
+    <light pos="0 0 0" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.1" type="plane" material="groundplane"/>
   </worldbody>
+
+  <worldbody>
+    <body name="target" mocap="true" pos="0 0 0">
+      <geom type="sphere" size="0.03" rgba="1 0 0 0.5" contype="0" conaffinity="0"/>
+    </body>
+</worldbody>
 </mujoco>
