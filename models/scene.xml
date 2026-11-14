@@ -23,5 +23,5 @@
     <body name="target" mocap="true" pos="0 0 0">
       <geom type="sphere" size="0.03" rgba="1 0 0 0.5" contype="0" conaffinity="0"/>
     </body>
-</worldbody>
+  </worldbody>
 </mujoco>

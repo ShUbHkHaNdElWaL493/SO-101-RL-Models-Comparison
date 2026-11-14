@@ -5,7 +5,7 @@ import numpy as np
 class SO101Env(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": 50}
 
-    def __init__(self, mjcf_file, mode='train', render_mode=None):
+    def __init__(self, mjcf_file, render_mode=None):
         super().__init__()
 
         self.model = mujoco.MjModel.from_xml_path(mjcf_file)
@@ -52,22 +52,28 @@ class SO101Env(gym.Env):
         ))
 
     def _set_target(self, target_pos, target_quat, target_gripper):
-        if target_pos != None:
-            self.target_pos = target_pos
-        if target_quat != None:
-            self.target_quat = target_quat
-        if target_gripper != None:
-            self.target_gripper = target_gripper
+        if target_pos is not None:
+            self.target_pos = np.array(target_pos, dtype=np.float32)
+        if target_quat is not None:
+            self.target_quat = np.array(target_quat, dtype=np.float32)
+        if target_gripper is not None:
+            self.target_gripper = float(target_gripper)
 
-    def reset(self, seed=None, reposition=True, target_pos=None, target_quat=None, target_gripper=None):
-        super().reset(seed=seed)
+    def reset(self, seed=None, options=None):
+        super().reset(seed=seed, options=options)
+        if options is None:
+            options = {}
+        reposition = options.get("reposition", True)
+        target_pos = options.get("target_pos", None)
+        target_quat = options.get("target_quat", None)
+        target_gripper = options.get("target_gripper", None)
 
         if reposition:
             mujoco.mj_resetData(self.model, self.data)
             self.data.qpos[:6] = np.random.uniform(-0.2, 0.2, size=6)
 
-        if target_pos or target_quat or target_gripper:
-            self._set_target()
+        if target_pos is not None or target_quat is not None or target_gripper is not None:
+            self._set_target(target_pos=target_pos, target_quat=target_quat, target_gripper=target_gripper)
         else:
             self._sample_target()
 
@@ -76,7 +82,7 @@ class SO101Env(gym.Env):
             self.data.mocap_pos[target_mocap_id] = self.target_pos
             self.data.mocap_quat[target_mocap_id] = self.target_quat
         except Exception:
-            pass # Skip if no target body exists in XML
+            pass
 
         mujoco.mj_forward(self.model, self.data)
 
@@ -112,9 +118,9 @@ class SO101Env(gym.Env):
 
         error_gripper = np.abs(current_gripper - self.target_gripper)
 
-        reward_pos = -2.0 * error_pos
-        reward_quat = -4.0 * error_quat
-        reward_gripper = -1.0 * error_gripper
+        reward_pos = -1.0 * error_pos
+        reward_quat = -2.0 * error_quat
+        reward_gripper = -0.5 * error_gripper
 
         success = (error_pos < 0.01) and (error_quat < 0.01) and (error_gripper < 0.01)
         reward_success = 10.0 if success else 0.0

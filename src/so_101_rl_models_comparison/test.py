@@ -1,10 +1,10 @@
-import argparse
+# import argparse
 from gymnasium.wrappers import TimeLimit
 import mujoco.viewer
 from stable_baselines3 import PPO, SAC
 import time
 
-from so_101_rl_models_comparison.so101_env import SO101Env
+from so_101_rl_models_comparison.env import SO101Env
 
 def test(mjcf_file, model_type='PPO', episodes=5):
     env = SO101Env(mjcf_file=mjcf_file)
@@ -51,12 +51,21 @@ def test(mjcf_file, model_type='PPO', episodes=5):
     env.close()
 
 def main():
-    parser = argparse.ArgumentParser(description='Test an RL model for the LeRobot SO-101 robot arm environment.')
-    parser.add_argument('-f', '--mjcf_file', type=str, default='models/so101_scene.xml', help='Path to the MJCF file.')
-    parser.add_argument('-m', '--model_type', type=str, default='SAC', help='Type of RL model to test.')
-    parser.add_argument('-e', '--episodes', type=int, default=10, help='Number of episodes for testing the model.')
-    args = parser.parse_args()
-    test(mjcf_file=args.mjcf_file, model_type=args.model_type, episodes=args.episodes)
+    # parser = argparse.ArgumentParser(description='Test an RL model for the LeRobot SO-101 robot arm environment.')
+    # parser.add_argument('-f', '--mjcf_file', type=str, default='models/scene.xml', help='Path to the MJCF file.')
+    # parser.add_argument('-m', '--model_type', type=str, default='SAC', help='Type of RL model to test.')
+    # parser.add_argument('-e', '--episodes', type=int, default=10, help='Number of episodes for testing the model.')
+    # args = parser.parse_args()
+
+    # model_type = args.model_type
+    # mjcf_file = args.mjcf_file
+    # episodes = args.episodes
+
+    model_type = 'SAC'
+    mjcf_file = 'models/scene.xml'
+    episodes = 10
+
+    test(mjcf_file=mjcf_file, model_type=model_type, episodes=episodes)
 
 if __name__ == '__main__':
     main()

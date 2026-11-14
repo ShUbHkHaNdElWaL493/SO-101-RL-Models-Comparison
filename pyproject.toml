@@ -9,18 +9,16 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "gymnasium[mujoco]>=0.29.1",
-    "imitation>=0.5.0",
     "mujoco>=4.0.0",
     "onnx>=1.23.2",
     "onnxruntime-gpu>=1.31.1",
-    "stable-baselines3[extra]>=2.9.2",
-    "torch>=2.15.0",
-    "torchaudio>=2.11.1",
-    "torchvision>=0.29.2",
+    "stable-baselines3[extra]>=2.9.2"
 ]
 
 [project.scripts]
 so-101-rl-models-comparison = "so_101_rl_models_comparison:main"
+so-101-rl-models-comparison-train = "so_101_rl_models_comparison.train:main"
+so-101-rl-models-comparison-test = "so_101_rl_models_comparison.test:main"
 
 [build-system]
 requires = ["uv_build>=0.13.7,<0.14.0"]
