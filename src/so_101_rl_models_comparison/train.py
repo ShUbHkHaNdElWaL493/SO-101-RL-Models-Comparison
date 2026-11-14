@@ -1,4 +1,4 @@
-# import argparse
+import argparse
 from gymnasium.wrappers import TimeLimit
 from stable_baselines3 import PPO, SAC
 from stable_baselines3.common.callbacks import CheckpointCallback
@@ -16,19 +16,19 @@ def make_env(mjcf_file: str):
     return initialize_env
 
 def main():
-    # parser = argparse.ArgumentParser(description='Train an RL model for the LeRobot SO-101 robot arm environment.')
-    # parser.add_argument('-f', '--mjcf_file', type=str, default='models/scene.xml', help='Path to the MJCF file.')
-    # parser.add_argument('-m', '--model_type', type=str, default='SAC', help='Type of RL model to train.')
-    # parser.add_argument('-t', '--time_steps', type=int, default=2_000_000, help='Number of time steps for training the model.')
-    # args = parser.parse_args()
+    parser = argparse.ArgumentParser(description='Train an RL model for the LeRobot SO-101 robot arm environment.')
+    parser.add_argument('-f', '--mjcf_file', type=str, default='models/scene.xml', help='Path to the MJCF file.')
+    parser.add_argument('-m', '--model_type', type=str, default='SAC', help='Type of RL model to train.')
+    parser.add_argument('-t', '--time_steps', type=int, default=2_000_000, help='Number of time steps for training the model.')
+    args = parser.parse_args()
 
-    # model_type = args.model_type
-    # mjcf_file = args.mjcf_file
-    # time_steps = args.time_steps
+    model_type = args.model_type
+    mjcf_file = args.mjcf_file
+    time_steps = args.time_steps
 
-    model_type = 'SAC'
-    mjcf_file = 'models/scene.xml'
-    time_steps = 2_000_000
+    # model_type = 'SAC'
+    # mjcf_file = 'models/scene.xml'
+    # time_steps = 2_000_000
 
     env = SubprocVecEnv([make_env(mjcf_file=mjcf_file) for _ in range(8)])
 
