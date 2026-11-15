@@ -61,10 +61,6 @@ def main():
     mjcf_file = args.mjcf_file
     episodes = args.episodes
 
-    # model_type = 'SAC'
-    # mjcf_file = 'models/scene.xml'
-    # episodes = 10
-
     test(mjcf_file=mjcf_file, model_type=model_type, episodes=episodes)
 
 if __name__ == '__main__':

@@ -26,10 +26,6 @@ def main():
     mjcf_file = args.mjcf_file
     time_steps = args.time_steps
 
-    # model_type = 'SAC'
-    # mjcf_file = 'models/scene.xml'
-    # time_steps = 2_000_000
-
     env = SubprocVecEnv([make_env(mjcf_file=mjcf_file) for _ in range(8)])
 
     if model_type == 'PPO':
